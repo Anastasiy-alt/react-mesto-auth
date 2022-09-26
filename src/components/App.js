@@ -13,6 +13,7 @@ import AddPlacePopup from './AddPlacePopup'
 import ProtectedRoute from './ProtectedRoute';
 import Register from './Register';
 import Login from './Login';
+import * as auth from './auth';
 import '../index.css';
 
 function App() {
@@ -28,6 +29,31 @@ function App() {
     const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
     const [selectDelete, setSelectDelete] = useState(false);
     const [deleteCard, setDeleteCard] = useState('');
+
+const tokenCheck = () => {
+    // если у пользователя есть токен в localStorage,
+    // эта функция проверит валидность токена 
+      const jwt = localStorage.getItem('jwt');
+    if (jwt){
+      // проверим токен
+      auth.checkToken(jwt).then((res) => {
+        if (res){
+                  // здесь можем получить данные пользователя!
+          const userData = {
+            email: res.email,
+            password: res.password
+          }
+                  // поместим их в стейт внутри App.js
+          this.setState({
+            loggedIn: true,
+            userData
+          }, () => {
+            this.props.history.push("/main");
+          });
+        }
+      }); 
+    }
+  }
 
     useEffect(() => {
         api.getInitialCards()
@@ -128,7 +154,9 @@ function App() {
     }
 
     return (
+    <BrowserRouter>
         <CurrentUserContext.Provider value={currentUser}>
+            
             <div className="page">
 
                 <Header />
@@ -153,14 +181,15 @@ function App() {
                         cards={cards}
                         onCardLike={handleCardLike}
                         cardId={deleteCard} /> */}
+                    
+                    <Route path="/sign-in">
+                        <Login />
+                    </Route>
                     <Route path="/sign-up">
                         <Register />
                     </Route>
-                    <Route path="/sign-in">
-                        {/* <Login /> */}
-                    </Route>
                     <Route exact path="/">
-                        {loggedIn ? <Redirect to="/Main" /> : <Redirect to="/sign-up" />}
+                        {loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-up" />}
                     </Route>
                 </Switch>
 
@@ -197,6 +226,7 @@ function App() {
 
             </div>
         </CurrentUserContext.Provider>
+        </BrowserRouter>
     );
 }
 export default App;

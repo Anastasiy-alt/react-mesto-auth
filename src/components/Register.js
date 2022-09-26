@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../index.css';
 
-function Register () {
+function Registere () {
   return (
     <div className="sign">
         <p className="sign__welcome">
@@ -23,7 +23,7 @@ function Register () {
   )
 }
 
-class Registere extends React.Component {
+class Register extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,22 +47,22 @@ class Registere extends React.Component {
   }
   render() {
     return (
-      <div className="register">
-        <p className="register__welcome">
-          Регистрация
-        </p>
-        <form onSubmit={this.handleSubmit} className="register__form">
-          <input className="register__input popup__item" id="email" name="email" type="email" value={this.state.email} onChange={this.handleChange} placeholder="Email" />
-          <input className="register__input popup__item" id="password" name="password" type="password" value={this.state.password} onChange={this.handleChange} placeholder="Пароль" />
-          <div className="register__button-container">
-            <button type="submit" onSubmit={this.handleSubmit} className="register__link">Зарегистрироваться</button>
+      <div className="sign register">
+          <p className="sign__welcome">
+            Регистрация
+          </p>
+          <form className="sign__form">
+            <input className="sign__input popup__item" id="email" name="email" type="email" placeholder="Email" />
+            <input className="sign__input popup__item" id="password" name="password" type="password" placeholder="Пароль" />
+            <div className="sign__button-container">
+              <button type="submit" className="button popup__button sign__link">Зарегистрироваться</button>
+            </div>
+          </form>
+          <div className="sign__signin">
+            <p className="sign__signin-text">Уже зарегистрированы?</p>&nbsp;
+            <Link to="login" className="sign__login-link">Войти</Link>
           </div>
-        </form>
-        <div className="register__signin">
-          <p>Уже зарегистрированы?</p>
-          <Link to="login" className="register__login-link">Войти</Link>
         </div>
-      </div>
     );
   }
 
