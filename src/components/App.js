@@ -12,6 +12,7 @@ import DeleteCardPopup from './DeleteCardPopup';
 import AddPlacePopup from './AddPlacePopup'
 import ProtectedRoute from './ProtectedRoute';
 import Register from './Register';
+import Login from './Login';
 import '../index.css';
 
 function App() {
@@ -131,7 +132,6 @@ function App() {
             <div className="page">
 
                 <Header />
-                <Register />
                 <Switch>
                     <ProtectedRoute path="/main" loggedIn={loggedIn} component={Main}
                         onEditProfile={handleEditProfileClick}

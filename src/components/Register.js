@@ -4,20 +4,20 @@ import '../index.css';
 
 function Register () {
   return (
-    <div className="register">
-        <p className="register__welcome">
+    <div className="sign">
+        <p className="sign__welcome">
           Регистрация
         </p>
-        <form className="register__form">
-          <input className="register__input popup__item" id="email" name="email" type="email" placeholder="Email" />
-          <input className="register__input popup__item" id="password" name="password" type="password" placeholder="Пароль" />
-          <div className="register__button-container">
-            <button type="submit" className="button popup__button register__link">Зарегистрироваться</button>
+        <form className="sign__form">
+          <input className="sign__input popup__item" id="email" name="email" type="email" placeholder="Email" />
+          <input className="sign__input popup__item" id="password" name="password" type="password" placeholder="Пароль" />
+          <div className="sign__button-container">
+            <button type="submit" className="button popup__button sign__link">Зарегистрироваться</button>
           </div>
         </form>
-        <div className="register__signin">
-          <p className="register__signin-text">Уже зарегистрированы?</p>&nbsp;
-          <Link to="login" className="register__login-link">Войти</Link>
+        <div className="sign__signin">
+          <p className="sign__signin-text">Уже зарегистрированы?</p>&nbsp;
+          <Link to="login" className="sign__login-link">Войти</Link>
         </div>
       </div>
   )
