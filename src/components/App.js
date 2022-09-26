@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { CurrentUserContext } from '../context/CurrentUserContext';
 import Header from './Header';
 import Footer from './Footer';
@@ -9,9 +10,13 @@ import EditProfilePopup from './EditProfilePopup'
 import EditAvatarPopup from './EditAvatarPopup'
 import DeleteCardPopup from './DeleteCardPopup';
 import AddPlacePopup from './AddPlacePopup'
+import ProtectedRoute from './ProtectedRoute';
+import Register from './Register';
 import '../index.css';
 
 function App() {
+
+    let loggedIn = false;
 
     const [currentUser, setCurrentUser] = useState({});
     const [cards, setCards] = useState([]);
@@ -126,16 +131,39 @@ function App() {
             <div className="page">
 
                 <Header />
-                <Main
-                    onEditProfile={handleEditProfileClick}
-                    onAddPlace={handleAddPlaceClick}
-                    onEditAvatar={handleEditAvatarClick}
-                    onCardClick={handleCardClick}
-                    onDeleteClick={handleRemoveClick}
-                    onUserInfo={handleUserInfo}
-                    cards={cards}
-                    onCardLike={handleCardLike}
-                    cardId={deleteCard} />
+                <Register />
+                <Switch>
+                    <ProtectedRoute path="/main" loggedIn={loggedIn} component={Main}
+                        onEditProfile={handleEditProfileClick}
+                        onAddPlace={handleAddPlaceClick}
+                        onEditAvatar={handleEditAvatarClick}
+                        onCardClick={handleCardClick}
+                        onDeleteClick={handleRemoveClick}
+                        onUserInfo={handleUserInfo}
+                        cards={cards}
+                        onCardLike={handleCardLike}
+                        cardId={deleteCard} />
+                    {/* <Main
+                        onEditProfile={handleEditProfileClick}
+                        onAddPlace={handleAddPlaceClick}
+                        onEditAvatar={handleEditAvatarClick}
+                        onCardClick={handleCardClick}s
+                        onDeleteClick={handleRemoveClick}
+                        onUserInfo={handleUserInfo}
+                        cards={cards}
+                        onCardLike={handleCardLike}
+                        cardId={deleteCard} /> */}
+                    <Route path="/sign-up">
+                        <Register />
+                    </Route>
+                    <Route path="/sign-in">
+                        {/* <Login /> */}
+                    </Route>
+                    <Route exact path="/">
+                        {loggedIn ? <Redirect to="/Main" /> : <Redirect to="/sign-up" />}
+                    </Route>
+                </Switch>
+
                 <Footer />
 
                 <EditProfilePopup
