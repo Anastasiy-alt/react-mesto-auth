@@ -40,8 +40,10 @@
 @import url(./blocks/popup/_opened/popup_opened.css);
 @import url(./blocks/popup/_for/popup_for_img.css);
 @import url(./blocks/popup/__container/_for/popup__container_for_img.css);
+@import url(./blocks/popup/__container/_for/popup__container_for_tooltip.css);
 @import url(./blocks/popup/__close/_for/popup__close_for_img.css);
 @import url(./blocks/popup/__img/popup__img.css);
+@import url(./blocks/popup/__icon/popup__icon.css);
 @import url(./blocks/popup/__info-img/popup__info-img.css);
 @import url(./blocks/popup/__input-error/popup__input-error.css);
 @import url(./blocks/popup/__lable/popup__label.css);
@@ -52,6 +54,7 @@
 @import url(./blocks/popup/__heading/_for/popup__heading_for_delete.css);
 @import url(./blocks/popup/__container/_for/popup__container_for_avatar.css);
 @import url(./blocks/popup/__heading/_for/popup__heading_for_avatar.css);
+@import url(./blocks/popup/__heading/_for/popup__heading_for_tooltip.css);
 @import url(./blocks/element/__delete/_hidden/element__delete_hidden.css);
 @import url(./blocks/sign/sign.css);
 @import url(./blocks/sign/__button-container/sign__button-container.css);

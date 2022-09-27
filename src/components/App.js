@@ -13,6 +13,7 @@ import AddPlacePopup from './AddPlacePopup'
 import ProtectedRoute from './ProtectedRoute';
 import Register from './Register';
 import Login from './Login';
+import InfoTooltip from './InfoTooltip';
 import * as auth from './auth';
 import '../index.css';
 
@@ -194,6 +195,11 @@ function App() {
                 </Switch>
 
                 <Footer />
+
+                <InfoTooltip
+                loggedIn={loggedIn}
+                    isOpen={true}
+                    onClose={closeAllPopups} />
 
                 <EditProfilePopup
                     isOpen={isEditProfilePopupOpen}
