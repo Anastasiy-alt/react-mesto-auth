@@ -30,30 +30,30 @@ function App() {
     const [selectDelete, setSelectDelete] = useState(false);
     const [deleteCard, setDeleteCard] = useState('');
 
-const tokenCheck = () => {
-    // если у пользователя есть токен в localStorage,
-    // эта функция проверит валидность токена 
-      const jwt = localStorage.getItem('jwt');
-    if (jwt){
-      // проверим токен
-      auth.checkToken(jwt).then((res) => {
-        if (res){
-                  // здесь можем получить данные пользователя!
-          const userData = {
-            email: res.email,
-            password: res.password
-          }
-                  // поместим их в стейт внутри App.js
-          this.setState({
-            loggedIn: true,
-            userData
-          }, () => {
-            this.props.history.push("/main");
-          });
+    const tokenCheck = () => {
+        // если у пользователя есть токен в localStorage,
+        // эта функция проверит валидность токена 
+        const jwt = localStorage.getItem('jwt');
+        if (jwt) {
+            // проверим токен
+            auth.checkToken(jwt).then((res) => {
+                if (res) {
+                    // здесь можем получить данные пользователя!
+                    const userData = {
+                        email: res.email,
+                        password: res.password
+                    }
+                    // поместим их в стейт внутри App.js
+                    this.setState({
+                        loggedIn: true,
+                        userData
+                    }, () => {
+                        this.props.history.push("/main");
+                    });
+                }
+            });
         }
-      }); 
     }
-  }
 
     useEffect(() => {
         api.getInitialCards()
@@ -154,9 +154,9 @@ const tokenCheck = () => {
     }
 
     return (
-    <BrowserRouter>
+
         <CurrentUserContext.Provider value={currentUser}>
-            
+
             <div className="page">
 
                 <Header />
@@ -181,7 +181,7 @@ const tokenCheck = () => {
                         cards={cards}
                         onCardLike={handleCardLike}
                         cardId={deleteCard} /> */}
-                    
+
                     <Route path="/sign-in">
                         <Login />
                     </Route>
@@ -226,7 +226,6 @@ const tokenCheck = () => {
 
             </div>
         </CurrentUserContext.Provider>
-        </BrowserRouter>
     );
 }
 export default App;

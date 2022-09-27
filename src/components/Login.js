@@ -23,7 +23,7 @@ class Login extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      username: '',
+      email: '',
       password: ''
     }
     this.handleChange = this.handleChange.bind(this);
@@ -47,8 +47,8 @@ class Login extends React.Component {
             Вход
           </p>
           <form className="sign__form">
-            <input className="sign__input popup__item" required id="username" name="username" type="text" placeholder="Email" />
-            <input className="sign__input popup__item" required id="password" name="password" type="password" placeholder="Пароль" />
+            <input className="sign__input popup__item" required id="email" name="email" type="email" placeholder="Email" value={this.state.email} onChange={this.handleChange} />
+            <input className="sign__input popup__item" required id="password" name="password" type="password" placeholder="Пароль" value={this.state.password} onChange={this.handleChange} />
             <div className="login__button-container">
               <button type="submit" className="button popup__button sign__link">Войти</button>
             </div>
