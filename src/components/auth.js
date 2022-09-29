@@ -1,7 +1,7 @@
 export const BASE_URL = 'https://auth.nomoreparties.co';
 
 export const register = () => {
-    return fetch(`${BASE_URL}/auth/local/signup`, {
+    return fetch(`${BASE_URL}/auth/local/sign-up`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -40,15 +40,15 @@ export const registered = (username, password, email) => {
 };
 
 export const authorize = () => {
-    return fetch(`${BASE_URL}/auth/local/signin`, {
+    return fetch(`${BASE_URL}/auth/local/sign-in`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
-            "password": "dsfsdfsdfsdf",
-            "email": "email@email.ru"
+            "password": "1234",
+            "email": "e@e.ru"
          })
     })
         .then((response => response.json()))
@@ -94,7 +94,7 @@ export const checkToken = (JWT) => {
         .then(data => data)
 }
 
-export const checkTokened = (token) => {
+export const checkToken1 = (token) => {
     return fetch(`${BASE_URL}/users/me`, {
         method: 'GET',
         headers: {

@@ -8,3 +8,10 @@
     color: #FFFFFF;
     margin-top: 6px;
 }
+
+
+@media screen and (max-width: 425px) {
+    .header__link {
+       margin-right: 30px
+    }
+}

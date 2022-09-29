@@ -19,7 +19,16 @@ import '../index.css';
 
 function App() {
 
-    let loggedIn = false;
+    // let loggedIn = false;
+    const [loggedIn, setLoggedIn] = useState(false);
+    function componentDidMount() {
+        // позже здесь тоже нужно будет проверить токен пользователя!
+    };
+    function handleLogin(e) {
+        e.preventDefault();
+        setLoggedIn(true);
+
+    }
 
     const [currentUser, setCurrentUser] = useState({});
     const [cards, setCards] = useState([]);
@@ -39,7 +48,6 @@ function App() {
             // проверим токен
             auth.checkToken(jwt).then((res) => {
                 if (res) {
-                    // здесь можем получить данные пользователя!
                     const userData = {
                         email: res.email,
                         password: res.password
@@ -55,7 +63,6 @@ function App() {
             });
         }
     }
-
     useEffect(() => {
         api.getInitialCards()
             .then((cardData) => {
@@ -152,6 +159,13 @@ function App() {
         setIsDeletePopupOpen(false);
         setSelectDelete(false);
         setSelectedCard({});
+        setIsInfoTooltippopupOpen(false);
+    }
+
+    const [isInfoTooltippopupOpen, setIsInfoTooltippopupOpen] = useState(false);
+
+    const handleInfoTooltippopupClick = () => {
+        setIsInfoTooltippopupOpen(!isInfoTooltippopupOpen);
     }
 
     return (
@@ -184,10 +198,10 @@ function App() {
                         cardId={deleteCard} /> */}
 
                     <Route path="/sign-in">
-                        <Login />
+                        <Login InfoTooltip={handleInfoTooltippopupClick} handleLogin={handleLogin} />
                     </Route>
                     <Route path="/sign-up">
-                        <Register />
+                        <Register InfoTooltip={handleInfoTooltippopupClick} />
                     </Route>
                     <Route exact path="/">
                         {loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-up" />}
@@ -197,8 +211,8 @@ function App() {
                 <Footer />
 
                 <InfoTooltip
-                loggedIn={loggedIn}
-                    isOpen={true}
+                    loggedIn={loggedIn}
+                    isOpen={isInfoTooltippopupOpen}
                     onClose={closeAllPopups} />
 
                 <EditProfilePopup
