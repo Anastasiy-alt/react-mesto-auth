@@ -3,35 +3,52 @@ import { Link, withRouter, useHistory } from 'react-router-dom';
 import * as auth from './auth';
 import '../index.css';
 
-function Register({ InfoTooltip }) {
-  const [userData, setUserData] = React.useState({ email: "", password: "", confirmPassword: "" });
+function Register({ onRegister }) {
+  const [userData, setUserData] = React.useState({ email: '', password: ''});
 
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setUserData((state) => ({ ...state, [name]: value }));
-  }
   
-  const history = useHistory();
+const handleChange = (e) => {
+    const {name, value} = e.target;
+    setUserData((evt) => ({
+        ...evt,
+        [name]: value,
+    }));
+}
 
-  function handleSubmit(e) {
+const handleSubmit = (e) => {
     e.preventDefault();
-    if (userData.password === userData.confirmPassword) {
-      const { password, email } = userData;
-      auth.register(password, email).then((res) => {
-        if (res) {
-          setUserData({
-            message: ''
-          }, () => {
-            history.push('/sign-in');
-          })
-        } else {
-          setUserData({
-            message: 'Что-то пошло не так!'
-          })
-        }
-      });
-    }
+    const {email, password} = userData;
+    if (onRegister && email && password) {
+      onRegister(email, password)
   }
+    
+}
+
+
+  // function handleSubmit(e) {
+  //   e.preventDefault();
+  //   onRegister(email,password)
+  //     // .catch((e) => setMessage(e.message))
+  // }
+  // function handleSubmit(e) {
+  //   e.preventDefault();
+  //   if (userData.password === userData.confirmPassword) {
+  //     const { password, email } = userData;
+  //     auth.register(password, email).then((res) => {
+  //       if (res) {
+  //         setUserData({
+  //           message: ''
+  //         }, () => {
+  //           history.push('/sign-in');
+  //         })
+  //       } else {
+  //         setUserData({
+  //           message: 'Что-то пошло не так!'
+  //         })
+  //       }
+  //     });
+  //   }
+  // }
 
   return (
 
@@ -40,10 +57,10 @@ function Register({ InfoTooltip }) {
         Регистрация
       </p>
       <form className="sign__form" onSubmit={handleSubmit}>
-        <input className="sign__input popup__item" id="email" name="email" type="email" placeholder="Email" value={userData.email} onChange={handleChange} />
-        <input className="sign__input popup__item" id="password" name="password" type="password" placeholder="Пароль" value={userData.password} onChange={handleChange} />
+        <input className="sign__input popup__item" id="email" name="email" type="email" placeholder="Email" value={userData.email} onChange={handleChange} required />
+        <input className="sign__input popup__item" id="password" name="password" type="password" placeholder="Пароль" value={userData.password} onChange={handleChange} required />
         <div className="sign__button-container">
-          <button type="submit" className="button popup__button sign__link" onSubmit={handleSubmit} onClick={InfoTooltip}>Зарегистрироваться</button>
+          <button type="submit" className="button popup__button sign__link" onSubmit={handleSubmit}>Зарегистрироваться</button>
         </div>
       </form>
       <div className="sign__signin">
@@ -54,4 +71,4 @@ function Register({ InfoTooltip }) {
   );
 }
 
-export default withRouter(Register);
+export default Register;

@@ -1,65 +1,63 @@
+
+import Api from '../utils/Api';
 export const BASE_URL = 'https://auth.nomoreparties.co';
 
-export const register = () => {
-    return fetch(`${BASE_URL}/auth/local/sign-up`, {
+
+// const check = (res) => {
+//     if (res.ok) {
+//       return res.json();
+//     } else {
+//       return Promise.reject(`Ошибка ${res.status}`);
+//     }
+//   }
+
+// export const register = (email, password) => {
+//     return fetch(`${BASE_URL}/sign-up`, {
+//         method: 'POST',
+//         headers: {
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({ email, password })
+//     })
+//         .then((response) => {
+//             return response.json();
+//         })
+//         .then((res) => {
+//             return res;
+//         })
+//         .catch((err) => console.log(err));
+// };
+
+export const register = (email, password) => {
+    return fetch(`${BASE_URL}/sign-up`, {
         method: 'POST',
-        headers: {
+        header: {
             'Accept': 'application/json',
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            "password": "somepassword",
-            "email": "email@yandex.ru"
-        })
+        body: JSON.stringify({ email, password })
     })
-        .then((response) => {
-            return response.json();
-        })
-        .then((res) => {
-            return res;
-        })
-        .catch((err) => console.log(err));
+        .then(Api._check)
 };
 
-export const registered = (username, password, email) => {
-    return fetch(`${BASE_URL}/auth/local/register`, {
+export const authorize = (email, password) => {
+    return fetch(`${BASE_URL}/sign-in`, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ username, password, email })
+        body: JSON.stringify({ email, password })
     })
-        .then((response) => {
-            return response.json();
-        })
-        .then((res) => {
-            return res;
-        })
-        .catch((err) => console.log(err));
-};
-
-export const authorize = () => {
-    return fetch(`${BASE_URL}/auth/local/sign-in`, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ 
-            "password": "1234",
-            "email": "e@e.ru"
-         })
-    })
-        .then((response => response.json()))
-        .then((data) => {
-            if (data.user) {
-                localStorage.setItem('jwt', data.jwt);
-                return data;
-            }
-        })
-        .catch(err => console.log(err))
-};
+        .then(Api._check)
+    // .then((data) => {
+    //     if (data.token){
+    //         localStorage.setItem('jwt', data.token);
+    //         return data;
+    //     }
+    // })
+}
 
 export const authorized = (identifier, password) => {
     return fetch(`${BASE_URL}/auth/local`, {
@@ -80,29 +78,20 @@ export const authorized = (identifier, password) => {
         .catch(err => console.log(err))
 };
 
-export const checkToken = (JWT) => {
+export const checkToken = (token) => {
     return fetch(`${BASE_URL}/users/me`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
-                "Content-Type": "application/json",
-                "Authorization" : `Bearer ${JWT}`
-            }
-        
-    })
-        .then(res => res.json())
-        .then(data => data)
-}
-
-export const checkToken1 = (token) => {
-    return fetch(`${BASE_URL}/users/me`, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Content-Type': "application/json",
+            'Authorization': `Bearer ${token}`
         }
     })
-        .then(res => res.json())
-        .then(data => data)
+        .then(response => {
+            if (response.status === 200) {
+                return response.json()
+            }
+        })
+        .then(response => response)
+        .then(Api._check)
 }

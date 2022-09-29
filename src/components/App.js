@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import { CurrentUserContext } from '../context/CurrentUserContext';
 import Header from './Header';
 import Footer from './Footer';
@@ -18,17 +18,53 @@ import * as auth from './auth';
 import '../index.css';
 
 function App() {
-
+    const history = useHistory();
     // let loggedIn = false;
     const [loggedIn, setLoggedIn] = useState(false);
-    function componentDidMount() {
-        // позже здесь тоже нужно будет проверить токен пользователя!
-    };
-    function handleLogin(e) {
-        e.preventDefault();
-        setLoggedIn(true);
+    const [userEmail, setUserEmail] = useState("");
+    const [isSuccess, setIsSuccess] = useState(false);
 
+    function handleLogin(email, password) {
+        auth
+            .authorize(email, password)
+            .then((data) => {
+                if (data) {
+                    setLoggedIn(true)
+                    localStorage.setItem('jwt', data.token);
+                    setUserEmail(email);
+                    history.push('/');
+                }
+            })
+            .catch((err) => {
+                setIsSuccess(false);
+                setIsInfoTooltipPopupOpen(true);
+                console.log(`Ошибка: ${err}`);
+                // console.log(`Невозможно войти. ${err}`);
+            })
     }
+
+    const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
+
+    const handleInfoTooltipPopupClick = () => {
+        setIsInfoTooltipPopupOpen(!isInfoTooltipPopupOpen);
+    }
+    function handleRegister(email, password) {
+        auth
+            .register(email, password)
+            .then(() => {
+                setIsSuccess(true);
+                setIsInfoTooltipPopupOpen(true);
+                history.push('/sign-in');
+            })
+            .catch((err) => {
+                setIsSuccess(false);
+                setIsInfoTooltipPopupOpen(true);
+                console.log(`Ошибка: ${err}`);
+            })
+    }
+
+
+
 
     const [currentUser, setCurrentUser] = useState({});
     const [cards, setCards] = useState([]);
@@ -46,41 +82,35 @@ function App() {
         const jwt = localStorage.getItem('jwt');
         if (jwt) {
             // проверим токен
-            auth.checkToken(jwt).then((res) => {
-                if (res) {
-                    const userData = {
-                        email: res.email,
-                        password: res.password
-                    }
-                    // поместим их в стейт внутри App.js
-                    this.setState({
-                        loggedIn: true,
-                        userData
-                    }, () => {
-                        this.props.history.push("/main");
-                    });
-                }
-            });
+            auth
+                .checkToken(jwt)
+                .then((res) => {
+                    setLoggedIn(true);
+                    setUserEmail(res.data.email);
+                    history.push('/')
+                        .catch((err) => {
+                            console.log(`Ошибка: ${err}`);
+                        })
+                });
         }
     }
+
     useEffect(() => {
-        api.getInitialCards()
-            .then((cardData) => {
+        if (loggedIn) {
+        Promise.all([api.getInitialCards(), api.getUserInfo()])
+            .then(([cardData, userData]) => {
                 setCards(cardData);
+                setCurrentUser(userData);
             })
-            .catch((error) => {
-                console.log(`Ошибка: ${error}`);
-            })
-    }, [])
+            .catch((err) => {
+                console.log(`Ошибка: ${err}`);
+            })}
+    }, [loggedIn])
+
     useEffect(() => {
-        api.getUserInfo()
-            .then((data) => {
-                setCurrentUser(data);
-            })
-            .catch((error) => {
-                console.log(`Ошибка: ${error}`);
-            })
+        tokenCheck()
     }, [])
+
 
     const handleUpdateUser = (userInfo) => {
         api.setUserInfo(userInfo)
@@ -159,14 +189,10 @@ function App() {
         setIsDeletePopupOpen(false);
         setSelectDelete(false);
         setSelectedCard({});
-        setIsInfoTooltippopupOpen(false);
+        setIsInfoTooltipPopupOpen(false);
     }
 
-    const [isInfoTooltippopupOpen, setIsInfoTooltippopupOpen] = useState(false);
 
-    const handleInfoTooltippopupClick = () => {
-        setIsInfoTooltippopupOpen(!isInfoTooltippopupOpen);
-    }
 
     return (
 
@@ -174,7 +200,8 @@ function App() {
 
             <div className="page">
 
-                <Header />
+                <Header
+                    userEmail={userEmail} />
                 <Switch>
                     <ProtectedRoute path="/main" loggedIn={loggedIn} component={Main}
                         onEditProfile={handleEditProfileClick}
@@ -198,21 +225,21 @@ function App() {
                         cardId={deleteCard} /> */}
 
                     <Route path="/sign-in">
-                        <Login InfoTooltip={handleInfoTooltippopupClick} handleLogin={handleLogin} />
+                        <Login InfoTooltip={handleInfoTooltipPopupClick} onLogin={handleLogin} />
                     </Route>
                     <Route path="/sign-up">
-                        <Register InfoTooltip={handleInfoTooltippopupClick} />
+                        <Register InfoTooltip={handleInfoTooltipPopupClick} onRegister={handleRegister} />
                     </Route>
-                    <Route exact path="/">
-                        {loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-up" />}
+                    <Route exact path="*">
+                        {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
                     </Route>
                 </Switch>
 
                 <Footer />
 
                 <InfoTooltip
-                    loggedIn={loggedIn}
-                    isOpen={isInfoTooltippopupOpen}
+                    loggedIn={isSuccess}
+                    isOpen={isInfoTooltipPopupOpen}
                     onClose={closeAllPopups} />
 
                 <EditProfilePopup
