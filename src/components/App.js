@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Switch, Redirect, useHistory } from 'react-router-dom';
+import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import { CurrentUserContext } from '../context/CurrentUserContext';
 import Header from './Header';
 import Footer from './Footer';
@@ -23,56 +23,62 @@ function App() {
     const [loggedIn, setLoggedIn] = useState(false);
     const [userEmail, setUserEmail] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
+    const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
 
     function handleLogin(email, password) {
-        auth
+        return auth
             .authorize(email, password)
             .then((data) => {
                 if (data) {
+                    console.log("3")
                     setLoggedIn(true)
+                    console.log(data, data.token)
                     localStorage.setItem('jwt', data.token);
-                    setUserEmail(email);
+                    setUserEmail(data.data.email);
                     history.push('/');
                 }
             })
             .catch((err) => {
+                console.log("4")
                 setIsSuccess(false);
                 setIsInfoTooltipPopupOpen(true);
                 console.log(`Ошибка: ${err}`);
-                // console.log(`Невозможно войти. ${err}`);
             })
     }
 
-    const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
 
-    const handleInfoTooltipPopupClick = () => {
-        setIsInfoTooltipPopupOpen(!isInfoTooltipPopupOpen);
-    }
+    // const handleInfoTooltipPopupClick = () => {
+    //     setIsInfoTooltipPopupOpen(!isInfoTooltipPopupOpen);
+    // }
     function handleRegister(email, password) {
-        auth
+        return auth
             .register(email, password)
             .then(() => {
+                console.log("1")
                 setIsSuccess(true);
                 setIsInfoTooltipPopupOpen(true);
                 history.push('/sign-in');
             })
             .catch((err) => {
+                console.log("2")
                 setIsSuccess(false);
                 setIsInfoTooltipPopupOpen(true);
                 console.log(`Ошибка: ${err}`);
             })
     }
 
+    const [currentUser, setCurrentUser] = useState({
+        name: '',
+        info: '',
+        avatar: '',
+    });
 
-
-
-    const [currentUser, setCurrentUser] = useState({});
     const [cards, setCards] = useState([]);
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
     const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
     const [selectedCard, setSelectedCard] = useState({});
-    const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+    // const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
     const [selectDelete, setSelectDelete] = useState(false);
     const [deleteCard, setDeleteCard] = useState('');
 
@@ -80,11 +86,14 @@ function App() {
         // если у пользователя есть токен в localStorage,
         // эта функция проверит валидность токена 
         const jwt = localStorage.getItem('jwt');
+        console.log("jwt", jwt)
         if (jwt) {
+            console.log("jwt", jwt)
             // проверим токен
             auth
                 .checkToken(jwt)
                 .then((res) => {
+                    console.log('res = ', res);
                     setLoggedIn(true);
                     setUserEmail(res.data.email);
                     history.push('/')
@@ -96,21 +105,22 @@ function App() {
     }
 
     useEffect(() => {
-        if (loggedIn) {
-        Promise.all([api.getInitialCards(), api.getUserInfo()])
-            .then(([cardData, userData]) => {
-                setCards(cardData);
-                setCurrentUser(userData);
-            })
-            .catch((err) => {
-                console.log(`Ошибка: ${err}`);
-            })}
-    }, [loggedIn])
-
-    useEffect(() => {
         tokenCheck()
     }, [])
 
+
+    useEffect(() => {
+        if (loggedIn) {
+            Promise.all([api.getInitialCards(), api.getUserInfo()])
+                .then(([cardData, userData]) => {
+                    setCards(cardData);
+                    setCurrentUser(userData);
+                })
+                .catch((err) => {
+                    console.log(`Ошибка: ${err}`);
+                })
+        }
+    }, [loggedIn])
 
     const handleUpdateUser = (userInfo) => {
         api.setUserInfo(userInfo)
@@ -186,13 +196,11 @@ function App() {
         setIsEditProfilePopupOpen(false);
         setIsAddPlacePopupOpen(false);
         setIsEditAvatarPopupOpen(false);
-        setIsDeletePopupOpen(false);
+        // setIsDeletePopupOpen(false);
         setSelectDelete(false);
         setSelectedCard({});
         setIsInfoTooltipPopupOpen(false);
     }
-
-
 
     return (
 
@@ -213,22 +221,12 @@ function App() {
                         cards={cards}
                         onCardLike={handleCardLike}
                         cardId={deleteCard} />
-                    {/* <Main
-                        onEditProfile={handleEditProfileClick}
-                        onAddPlace={handleAddPlaceClick}
-                        onEditAvatar={handleEditAvatarClick}
-                        onCardClick={handleCardClick}s
-                        onDeleteClick={handleRemoveClick}
-                        onUserInfo={handleUserInfo}
-                        cards={cards}
-                        onCardLike={handleCardLike}
-                        cardId={deleteCard} /> */}
 
                     <Route path="/sign-in">
-                        <Login InfoTooltip={handleInfoTooltipPopupClick} onLogin={handleLogin} />
+                        <Login onLogin={handleLogin} />
                     </Route>
                     <Route path="/sign-up">
-                        <Register InfoTooltip={handleInfoTooltipPopupClick} onRegister={handleRegister} />
+                        <Register onRegister={handleRegister} />
                     </Route>
                     <Route exact path="*">
                         {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}

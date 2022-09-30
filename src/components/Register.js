@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link, withRouter, useHistory } from 'react-router-dom';
-import * as auth from './auth';
+import { Link } from 'react-router-dom';
 import '../index.css';
 
 function Register({ onRegister }) {
@@ -20,35 +19,8 @@ const handleSubmit = (e) => {
     const {email, password} = userData;
     if (onRegister && email && password) {
       onRegister(email, password)
-  }
-    
+  } 
 }
-
-
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-  //   onRegister(email,password)
-  //     // .catch((e) => setMessage(e.message))
-  // }
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-  //   if (userData.password === userData.confirmPassword) {
-  //     const { password, email } = userData;
-  //     auth.register(password, email).then((res) => {
-  //       if (res) {
-  //         setUserData({
-  //           message: ''
-  //         }, () => {
-  //           history.push('/sign-in');
-  //         })
-  //       } else {
-  //         setUserData({
-  //           message: 'Что-то пошло не так!'
-  //         })
-  //       }
-  //     });
-  //   }
-  // }
 
   return (
 
