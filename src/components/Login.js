@@ -20,7 +20,6 @@ function Login({ onLogin }) {
 
   }
 
-
   return (
     <div className="sign login">
       <p className="sign__welcome">

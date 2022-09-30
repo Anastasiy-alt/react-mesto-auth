@@ -14,7 +14,7 @@ import ProtectedRoute from './ProtectedRoute';
 import Register from './Register';
 import Login from './Login';
 import InfoTooltip from './InfoTooltip';
-import * as auth from './auth';
+import * as auth from '../utils/auth';
 import '../index.css';
 
 function App() {
@@ -197,8 +197,8 @@ function App() {
                     userEmail={userEmail}
                     onSignOut={handleSignOut} />
                 <Switch>
-                    <ProtectedRoute exact path="/" 
-                        loggedIn={loggedIn} 
+                    <ProtectedRoute exact path="/"
+                        loggedIn={loggedIn}
                         component={Main}
                         onEditProfile={handleEditProfileClick}
                         onAddPlace={handleAddPlaceClick}

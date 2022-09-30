@@ -1,11 +1,5 @@
+import Api from './Api';
 export const BASE_URL = 'https://auth.nomoreparties.co';
-
-const checkResponse = (response) => {
-    if (response.ok) {
-        return response.json()
-    }
-    return Promise.reject(`Ошибка: ${response.status}`);
-}
 
 export const register = (email, password) => {
     return fetch(`${BASE_URL}/signup`, {
@@ -16,7 +10,7 @@ export const register = (email, password) => {
         },
         body: JSON.stringify({ email, password })
     })
-        .then(checkResponse)
+        .then(Api._check)
 };
 
 export const authorize = (email, password) => {
@@ -28,7 +22,7 @@ export const authorize = (email, password) => {
         },
         body: JSON.stringify({ email, password })
     })
-        .then(checkResponse)
+        .then(Api._check)
 };
 
 export const checkToken = (token) => {
