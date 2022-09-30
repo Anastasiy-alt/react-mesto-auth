@@ -30,7 +30,6 @@ function App() {
             .authorize(email, password)
             .then((data) => {
                 if (data) {
-                    console.log("3")
                     setLoggedIn(true)
                     console.log(data, data.token)
                     localStorage.setItem('jwt', data.token);
@@ -39,7 +38,6 @@ function App() {
                 }
             })
             .catch((err) => {
-                console.log("4")
                 setIsSuccess(false);
                 setIsInfoTooltipPopupOpen(true);
                 console.log(`Ошибка: ${err}`);
@@ -54,13 +52,11 @@ function App() {
         return auth
             .register(email, password)
             .then(() => {
-                console.log("1")
                 setIsSuccess(true);
                 setIsInfoTooltipPopupOpen(true);
                 history.push('/sign-in');
             })
             .catch((err) => {
-                console.log("2")
                 setIsSuccess(false);
                 setIsInfoTooltipPopupOpen(true);
                 console.log(`Ошибка: ${err}`);
@@ -211,7 +207,7 @@ function App() {
                 <Header
                     userEmail={userEmail} />
                 <Switch>
-                    <ProtectedRoute path="/main" loggedIn={loggedIn} component={Main}
+                    <ProtectedRoute path="/" loggedIn={loggedIn} component={Main}
                         onEditProfile={handleEditProfileClick}
                         onAddPlace={handleAddPlaceClick}
                         onEditAvatar={handleEditAvatarClick}
