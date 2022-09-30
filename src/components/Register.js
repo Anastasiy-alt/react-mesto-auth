@@ -3,24 +3,22 @@ import { Link } from 'react-router-dom';
 import '../index.css';
 
 function Register({ onRegister }) {
-  const [userData, setUserData] = React.useState({ email: '', password: ''});
+  const [userData, setUserData] = React.useState({ email: '', password: '' });
 
-  
-const handleChange = (e) => {
-    const {name, value} = e.target;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
     setUserData((evt) => ({
-        ...evt,
-        [name]: value,
+      ...evt,
+      [name]: value,
     }));
-}
+  }
 
-const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const {email, password} = userData;
-    if (onRegister && email && password) {
-      onRegister(email, password)
-  } 
-}
+    const { email, password } = userData;
+    onRegister(email, password)
+  }
 
   return (
 

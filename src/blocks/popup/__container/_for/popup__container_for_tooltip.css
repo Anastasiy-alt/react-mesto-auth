@@ -11,8 +11,8 @@
 
 @media screen and (max-width: 625px) {
     .popup__container_for_tooltip {
-        min-width: 280px;
-        min-height: 308px;
+        width: 280px;
+        height: 308px;
         height: auto;
     }
 }

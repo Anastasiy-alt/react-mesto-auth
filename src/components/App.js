@@ -19,7 +19,6 @@ import '../index.css';
 
 function App() {
     const history = useHistory();
-    // let loggedIn = false;
     const [loggedIn, setLoggedIn] = useState(false);
     const [userEmail, setUserEmail] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
@@ -31,10 +30,9 @@ function App() {
             .then((data) => {
                 if (data) {
                     setLoggedIn(true)
-                    console.log(data, data.token)
                     localStorage.setItem('jwt', data.token);
-                    setUserEmail(data.data.email);
-                    history.push('/');
+                    setUserEmail(email);
+                    history.push("/");
                 }
             })
             .catch((err) => {
@@ -44,17 +42,13 @@ function App() {
             })
     }
 
-
-    // const handleInfoTooltipPopupClick = () => {
-    //     setIsInfoTooltipPopupOpen(!isInfoTooltipPopupOpen);
-    // }
     function handleRegister(email, password) {
         return auth
             .register(email, password)
             .then(() => {
                 setIsSuccess(true);
                 setIsInfoTooltipPopupOpen(true);
-                history.push('/sign-in');
+                history.push("/sign-in");
             })
             .catch((err) => {
                 setIsSuccess(false);
@@ -63,11 +57,7 @@ function App() {
             })
     }
 
-    const [currentUser, setCurrentUser] = useState({
-        name: '',
-        info: '',
-        avatar: '',
-    });
+    const [currentUser, setCurrentUser] = useState({});
 
     const [cards, setCards] = useState([]);
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -82,20 +72,14 @@ function App() {
         // если у пользователя есть токен в localStorage,
         // эта функция проверит валидность токена 
         const jwt = localStorage.getItem('jwt');
-        console.log("jwt", jwt)
         if (jwt) {
-            console.log("jwt", jwt)
             // проверим токен
             auth
                 .checkToken(jwt)
                 .then((res) => {
-                    console.log('res = ', res);
                     setLoggedIn(true);
                     setUserEmail(res.data.email);
-                    history.push('/')
-                        .catch((err) => {
-                            console.log(`Ошибка: ${err}`);
-                        })
+                    history.push("/")
                 });
         }
     }
@@ -103,7 +87,6 @@ function App() {
     useEffect(() => {
         tokenCheck()
     }, [])
-
 
     useEffect(() => {
         if (loggedIn) {
@@ -117,6 +100,12 @@ function App() {
                 })
         }
     }, [loggedIn])
+
+    const handleSignOut = () => {
+        setLoggedIn(false);
+        localStorage.removeItem('jwt');
+        history.push("/sign-in");
+    }
 
     const handleUpdateUser = (userInfo) => {
         api.setUserInfo(userInfo)
@@ -192,7 +181,6 @@ function App() {
         setIsEditProfilePopupOpen(false);
         setIsAddPlacePopupOpen(false);
         setIsEditAvatarPopupOpen(false);
-        // setIsDeletePopupOpen(false);
         setSelectDelete(false);
         setSelectedCard({});
         setIsInfoTooltipPopupOpen(false);
@@ -205,9 +193,13 @@ function App() {
             <div className="page">
 
                 <Header
-                    userEmail={userEmail} />
+                    loggedIn={loggedIn}
+                    userEmail={userEmail}
+                    onSignOut={handleSignOut} />
                 <Switch>
-                    <ProtectedRoute path="/" loggedIn={loggedIn} component={Main}
+                    <ProtectedRoute exact path="/" 
+                        loggedIn={loggedIn} 
+                        component={Main}
                         onEditProfile={handleEditProfileClick}
                         onAddPlace={handleAddPlaceClick}
                         onEditAvatar={handleEditAvatarClick}
@@ -224,7 +216,7 @@ function App() {
                     <Route path="/sign-up">
                         <Register onRegister={handleRegister} />
                     </Route>
-                    <Route exact path="*">
+                    <Route>
                         {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
                     </Route>
                 </Switch>

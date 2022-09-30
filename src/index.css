@@ -65,3 +65,6 @@
 @import url(./blocks/sign/__welcome/sign__welcome.css);
 @import url(./blocks/sign/__link/sign__link.css);
 @import url(./blocks/sign/__signin-text/sign__signin-text.css);
+@import url(./blocks/header/__link/_exit/header__link_exit.css);
+@import url(./blocks/header/__email/header__email.css);
+@import url(./blocks/header/__auth/header__auth.css);
