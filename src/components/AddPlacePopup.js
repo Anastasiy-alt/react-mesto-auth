@@ -1,23 +1,32 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function AddPlacePopup({ isOpen, onClose, button, onAddCard }) {
 
-    const titleRef = useRef();
-    const linkRef = useRef();
 
-    function handleSubmit(e) {
-        e.preventDefault();
+    const [title, setTitle] = useState([]);
+    const [link, setLink] = useState([]);
+
+    function handleTitleChange(title) {
+        setTitle(title.target.value);
+    }
+
+    function handleLinkChange(link) {
+        setLink(link.target.value);
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
         onAddCard({
-            name: titleRef.current.value,
-            link: linkRef.current.value
+            name: title,
+            link: link,
         });
         onClose();
     }
 
     useEffect(() => {
-        titleRef.current.value = '';
-        linkRef.current.value = '';
+        setTitle("");
+        setLink("");
     }, [isOpen]);
 
     return (
@@ -25,7 +34,8 @@ function AddPlacePopup({ isOpen, onClose, button, onAddCard }) {
             <fieldset className="popup__input">
                 <label className="popup__label">
                     <input
-                        ref={titleRef}
+                        onChange={handleTitleChange}
+                        value={title || ''}
                         type="text"
                         className="popup__item popup__item_input_name"
                         name="name"
@@ -38,7 +48,8 @@ function AddPlacePopup({ isOpen, onClose, button, onAddCard }) {
                 </label>
                 <label className="popup__label">
                     <input
-                        ref={linkRef}
+                        onChange={handleLinkChange}
+                        value={link || ''}
                         type="url"
                         className="popup__item popup__item_input_info"
                         name="link"
