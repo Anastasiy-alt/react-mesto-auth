@@ -34,6 +34,7 @@ export const checkToken = (token) => {
             'Authorization': `Bearer ${token}`
         }
     })
+        .then(Api._check)
         .then(res => res.json())
         .then(data => data)
 }

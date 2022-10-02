@@ -21,7 +21,6 @@ function AddPlacePopup({ isOpen, onClose, button, onAddCard }) {
             name: title,
             link: link,
         });
-        onClose();
     }
 
     useEffect(() => {

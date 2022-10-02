@@ -80,7 +80,10 @@ function App() {
                     setLoggedIn(true);
                     setUserEmail(res.data.email);
                     history.push("/")
-                });
+                })
+                .catch((err) => {
+                    console.log(`Ошибка: ${err}`);
+                })
         }
     }
 
@@ -123,8 +126,8 @@ function App() {
                 setCards([newCard, ...cards]);
                 closeAllPopups();
             })
-            .catch((error) => {
-                console.log(`Ошибка: ${error}`);
+            .catch((err) => {
+                console.log(`Ошибка: ${err}`);
             })
     };
     const handleUpdateAvatar = (avatar) => {
@@ -133,8 +136,8 @@ function App() {
                 setCurrentUser(data);
                 closeAllPopups();
             })
-            .catch((error) => {
-                console.log(`Ошибка: ${error}`);
+            .catch((err) => {
+                console.log(`Ошибка: ${err}`);
             })
     };
 
@@ -144,8 +147,8 @@ function App() {
             .then((newCard) => {
                 setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
             })
-            .catch((error) => {
-                console.log(`Ошибка: ${error}`);
+            .catch((err) => {
+                console.log(`Ошибка: ${err}`);
             });
     }
     function handleCardDelete(cardId) {
@@ -153,8 +156,8 @@ function App() {
             .then(() => {
                 setCards((state) => state.filter((c) => c._id !== cardId));
             })
-            .catch((error) => {
-                console.log(`Ошибка: ${error}`);
+            .catch((err) => {
+                console.log(`Ошибка: ${err}`);
             });
     }
 
