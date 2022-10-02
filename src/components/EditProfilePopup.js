@@ -13,7 +13,6 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, button }) {
             name: name,
             about: description,
         });
-        onClose();
     }
 
     function handleNameChange(name) {

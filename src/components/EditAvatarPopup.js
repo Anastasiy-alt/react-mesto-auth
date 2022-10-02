@@ -10,7 +10,6 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, button }) {
         onUpdateAvatar({
             avatar: avatarRef.current.value,
         });
-        onClose();
     }
 
     useEffect(() => {
